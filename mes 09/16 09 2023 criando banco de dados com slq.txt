@@ -1,0 +1,51 @@
+create table Client (
+    Id       varchar(10) not null primary kay,
+    Nome     varchar(100),
+    Tefefone varchar(11),
+    Email    varchar(150),
+
+    IdVeiculo varchar(10),
+);
+
+create table Veiculo (
+    Id     varchar(10) not null primary kay,
+    Marca  varchar(50),
+    Modelo varchar(50),
+    Ano    integer,
+
+    IdDono varchar(10),
+    IdAcao varchar(10)
+);
+
+create table Servico (
+    Id        varchar(10) not null primary kay,
+    Descricao text,
+    Valor     integer,
+
+    IdObjeto      varchar(10),
+    IdTrabalhador varchar(10)
+);
+
+create table Mecanico (
+    Id            varchar(10) not null primary kay,
+    Nome          varchar(100),
+    Especialidade varchar(100),
+    Carga_horaria integer,
+
+    IdTrabalho varchar(10)
+);
+
+
+alter table Client
+add foreign key (IdVeiculo) references Veiculo(id);
+
+alter table Veiculo
+add foreign key (IdDono) references Client(id)
+add foreign key (IdAcao) references Servico(id);
+
+alter table Servico
+add foreign key (IdObjeto) references Veiculo(id)
+add foreign key (IdTrabalhador) references Mecanico(id);
+
+alter table Mecanico
+add foreign key (IdTrabalho) references Servico(id);

@@ -1,0 +1,19 @@
+-- select * from estado;
+-- select * from deputado;
+-- INSERT INTO deputado (nome, data_ingresso, partido, idestado) VALUES ('eu' , '2022-11-10', 'Oposicao' , 1 );
+-- INSERT INTO estado (nome, regiao) VALUES ('goias', 'norte');
+-- select * from estado;
+-- select * from deputado;
+
+-- 	CREATE TABLE projetos(
+-- 		id SERIAL PRIMARY KEY,
+-- 		nome VARCHAR(50),
+-- 		voto VARCHAR(20),
+-- 		idDeputado INT,
+-- 		FOREIGN KEY (idDeputado) REFERENCES deputado(id)
+-- 	);
+
+-- insert into projetos (voto, nome, idDeputado) values ('sim', 'asfaltar', 1);
+-- insert into projetos (voto, nome, idDeputado) values ('sim', 'asfaltar', 2);
+-- insert into projetos (voto, nome, idDeputado) values ('nao', 'asfaltar', 3);
+select voto from projetos where nome = 'asfaltar';

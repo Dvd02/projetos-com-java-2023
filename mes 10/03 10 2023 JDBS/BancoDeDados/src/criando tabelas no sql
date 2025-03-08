@@ -1,0 +1,10 @@
+pgAdmin:
+	Uusario: postgres
+	Senha:   postgres
+
+
+create table Teste (
+    Id     serial primary kay,
+    campo1 varchar(40),
+    campo2 varchar(5)
+);
