@@ -1,0 +1,150 @@
+import java.util.Scanner;
+
+class Contato {
+    private static int contador = 0;
+    private int identificador;
+    private String nome;
+    private String telefone;
+
+    public Contato(String nome, String telefone) {
+        this.identificador = ++contador;
+        this.nome = nome;
+        this.telefone = telefone;
+    }
+
+    public int getIdentificador() {
+        return identificador;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+}
+
+class Agenda {
+    private static final int CAPACIDADE_MAXIMA = 10;
+    private Contato[] contatos;
+    private int quantidadeContatos;
+
+    public Agenda() {
+        contatos = new Contato[CAPACIDADE_MAXIMA];
+        quantidadeContatos = 0;
+    }
+
+    public void adicionarContato(String nome, String telefone) throws AgendaCheiaException {
+        if (quantidadeContatos >= CAPACIDADE_MAXIMA) {
+            throw new AgendaCheiaException("A agenda está cheia. Não é possível adicionar mais contatos.");
+        }
+
+        if (nome.isEmpty()) {
+            throw new IllegalArgumentException("O nome não pode estar em branco.");
+        }
+
+        if (!telefone.matches("\\d+")) {
+            throw new IllegalArgumentException("O telefone deve conter apenas números.");
+        }
+
+        Contato contato = new Contato(nome, telefone);
+        contatos[quantidadeContatos] = contato;
+        quantidadeContatos++;
+    }
+
+    public Contato consultarContato(int identificador) throws ContatoNaoExisteException {
+        for (int i = 0; i < quantidadeContatos; i++) {
+            if (contatos[i].getIdentificador() == identificador) {
+                return contatos[i];
+            }
+        }
+
+        throw new ContatoNaoExisteException("O contato com o identificador " + identificador + " não foi encontrado.");
+    }
+}
+
+class ContatoNaoExisteException extends Exception {
+    public ContatoNaoExisteException(String mensagem) {
+        super(mensagem);
+    }
+}
+
+class AgendaCheiaException extends Exception {
+    public AgendaCheiaException(String mensagem) {
+        super(mensagem);
+    }
+}
+
+class Teste {
+    private static Agenda agenda = new Agenda();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int opcao = 0;
+
+        while (opcao != 3) {
+            exibirMenu();
+            opcao = lerOpcao();
+
+            switch (opcao) {
+                case 1:
+                    consultarContato();
+                    break;
+                case 2:
+                    adicionarContato();
+                    break;
+                case 3:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+
+            System.out.println();
+        }
+    }
+
+    private static void exibirMenu() {
+        System.out.println("===== MENU =====");
+        System.out.println("1 - Consultar contato");
+        System.out.println("2 - Adicionar contato");
+        System.out.println("3 - Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static int lerOpcao() {
+        return scanner.nextInt();
+    }
+
+    private static void consultarContato() {
+        System.out.print("Digite o identificador do contato: ");
+        int identificador = scanner.nextInt();
+
+        try {
+            Contato contato = agenda.consultarContato(identificador);
+            System.out.println("Contato encontrado:");
+            System.out.println("Identificador: " + contato.getIdentificador());
+            System.out.println("Nome: " + contato.getNome());
+            System.out.println("Telefone: " + contato.getTelefone());
+        } catch (ContatoNaoExisteException e) {
+            System.out.println("Contato não encontrado: " + e.getMessage());
+        }
+    }
+
+    private static void adicionarContato() {
+        System.out.print("Digite o nome do contato: ");
+        scanner.nextLine();
+        String nome = scanner.nextLine();
+
+        System.out.print("Digite o telefone do contato: ");
+        String telefone = scanner.nextLine();
+
+        try {
+            agenda.adicionarContato(nome, telefone);
+            System.out.println("Contato adicionado com sucesso!");
+        } catch (AgendaCheiaException | IllegalArgumentException e) {
+            System.out.println("Erro ao adicionar contato: " + e.getMessage());
+        }
+    }
+}

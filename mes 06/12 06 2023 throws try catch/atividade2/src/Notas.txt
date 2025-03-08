@@ -1,0 +1,134 @@
+/*
+
+int cartao = 0;
+int dataValidade = 1;
+int cvv = 2;
+
+String cartoes = {
+    {       "cartao"     ,"dataValidade", "CVV"},
+	{"5458 8684 1171 3015", "12/05/2024", "646"},
+	{"5206 5119 8212 7984", "12/02/2024", "944"},
+	{"5252 1049 8217 8661", "12/11/2024", "715"},
+	{"5531 6986 4910 7032", "12/03/2025", "552"},
+	{"5451 0704 7532 0558", "12/01/2024", "619"}
+}
+String cartoes2 = {
+	{   "cartao"   ,"5458 8684 1171 3015", "5206 5119 8212 7984", "5252 1049 8217 8661", "5531 6986 4910 7032", "5451 0704 7532 0558"},
+	{"dataValidade",    "12/05/2024"     ,     "12/02/2024"     ,     "12/11/2024"     ,     "12/03/2025"     ,     "12/01/2024"     },
+	{    "cvv"     ,        "646"        ,         "944"        ,         "715"        ,         "552"        ,         "619"        }
+}
+cartoes[2][cvv]; //715
+cartoes2[cvv][3]; //715
+
+*/
+
+import java.util.Scanner;
+
+class CartaoException extends Exception {
+    public CartaoException(String mensagem) {
+        super(mensagem);
+    }
+}
+
+class ValidadeException extends Exception {
+    public ValidadeException(String mensagem) {
+        super(mensagem);
+    }
+}
+
+class CVVException extends Exception {
+    public CVVException(String mensagem) {
+        super(mensagem);
+    }
+}
+
+class Compra {
+    private String numeroCartao;
+    private String dataCompra;
+    private int cvv;
+    private double valorCompra;
+
+    public Compra(String numeroCartao, String dataCompra, int cvv, double valorCompra) {
+        this.numeroCartao = numeroCartao;
+        this.dataCompra = dataCompra;
+        this.cvv = cvv;
+        this.valorCompra = valorCompra;
+    }
+
+    public void realizarCompra() throws CartaoException, ValidadeException, CVVException {
+        if (!validarCartao(numeroCartao)) {
+            throw new CartaoException("Cartão inválido.");
+        }
+
+        if (dataCompraExpirada(dataCompra)) {
+            throw new ValidadeException("A data da compra ultrapassou a data de validade do cartão.");
+        }
+
+        if (!validarCVV(cvv)) {
+            throw new CVVException("CVV inválido.");
+        }
+
+        if (valorCompra <= 0) {
+            throw new IllegalArgumentException("O valor da compra deve ser maior que zero.");
+        }
+
+        // Lógica para realizar a compra
+        System.out.println("Compra realizada com sucesso!");
+        System.out.println("Número do Cartão: " + numeroCartao);
+        System.out.println("Data da Compra: " + dataCompra);
+        System.out.println("CVV: " + cvv);
+        System.out.println("Valor da Compra: " + valorCompra);
+    }
+
+    private boolean validarCartao(String numeroCartao) {
+        // Lógica de validação do número do cartão
+        // Neste exemplo, consideramos qualquer número de cartão válido
+        return true;
+    }
+
+    private boolean dataCompraExpirada(String dataCompra) {
+        // Lógica para comparar a data de compra com a data de validade do cartão
+        // Neste exemplo, consideramos que a data de validade é posterior à data de compra
+        return false;
+    }
+
+    private boolean validarCVV(int cvv) {
+        // Lógica de validação do CVV
+        // Neste exemplo, consideramos qualquer CVV válido
+        return true;
+    }
+}
+
+class Teste {
+    private static final int NUMERO_COMPRAS = 10;
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= NUMERO_COMPRAS; i++) {
+            System.out.println("=== Compra " + i + " ===");
+            realizarCompra();
+            System.out.println();
+        }
+    }
+
+    private static void realizarCompra() {
+        System.out.print("Número do Cartão: ");
+        String numeroCartao = scanner.nextLine();
+
+        System.out.print("Data da Compra (DD/MM/YYYY): ");
+        String dataCompra = scanner.nextLine();
+
+        System.out.print("CVV: ");
+        int cvv = scanner.nextInt();
+
+        System.out.print("Valor da Compra: ");
+        double valorCompra = scanner.nextDouble();
+
+        try {
+            Compra compra = new Compra(numeroCartao, dataCompra, cvv, valorCompra);
+            compra.realizarCompra();
+        } catch (CartaoException | ValidadeException | CVVException | IllegalArgumentException e) {
+            System.out.println("Erro ao realizar a compra: " + e.getMessage());
+        }
+    }
+}
